@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
+//Schema for Mongodb, Requires Email and Password
 userSchema = new Schema({
 
     firstname: String,

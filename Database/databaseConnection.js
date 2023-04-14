@@ -6,7 +6,9 @@ dotenv.config()
 const databaseURL = process.env.DB_URL
 
 async function dbConnect() {
+    
 
+    //Connects to monogdb thru databaseURL
     mongoose
         .connect(
             databaseURL,

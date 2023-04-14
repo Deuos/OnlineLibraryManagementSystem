@@ -8,7 +8,9 @@ const auth = async (req, res, next) => {
 
     try {
 
-        const token = await req.header('Authorization')?.replace('Bearer ', '')
+        //const token = await req.header('Authorization')?.replace('Bearer ', '')
+
+        const token = req.cookies.access_token;
 
         if(!token) {
 

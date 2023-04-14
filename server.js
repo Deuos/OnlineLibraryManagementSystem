@@ -1,12 +1,13 @@
 const express = require("express")
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const jwt = require('jsonwebtoken')
-//Cookies and Password Hasher
-const session = require("express-session")
+
+//Password Hasher, Cookies, JWT web token
 const bcrypt = require("bcrypt")
+const cookieParser = require('cookie-parser')
+const jwt = require('jsonwebtoken')
+
 //Mongodb
 const mongoose = require("mongoose")
+
 //.env
 const env = require('dotenv').config()
 
@@ -14,13 +15,18 @@ const env = require('dotenv').config()
 const app =  express()
 
 //Middleware
+app.use(express.urlencoded({ extended: true}));
 app.use(express.json())
-//EJS
+app.use(cookieParser());
+
+//EJS renders .ejs files from views 
 app.set('view engine','ejs'); 
+
 //Connection to monogdb
 const dbConnect = require("./Database/databaseConnection.js")
 dbConnect()
 
+/* Models */
 //get user Model
 const User = require('./Models/user.js')
 //JWT token check
@@ -31,6 +37,7 @@ const port = 8080;
 //Home/Login
 app.get('/', (req, res) => {
 
+    //renders login.ejs
     res.render('login');
 })
 
@@ -58,15 +65,16 @@ app.post('/', (req, res, err) => {
                             userID: user._id,
                             userEmail: user.email,
                         },
-                        process.env.JWT_TOKEN,//Change to "RANDOM-TOKEN"
-                        { expiresIn: "24h" }
+                        process.env.JWT_TOKEN
                     )
-                    //return success response if email and password matched
-                    return res.status(200).send({
-                        message: "Login Successful",
-                        email: user.email,
-                        token,
-                    })
+
+                    //Create cookie set the cookie experies in 24 hours
+                    return res.cookie('access_token', token, {
+                        httpOnly: true,
+                        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+                    }).status(200)
+                    .json({message: "Logged in"});
+
                 })
                 //catches the error if the password doesn't match
                 .catch((err) => {
@@ -97,12 +105,12 @@ app.get('/register', (req, res, next) => {
 app.post('/register', (req, res) => {
     
     console.log(req.body)
-    
+    //Hashes password using bcrypt
     bcrypt.hash(req.body.password, 10)
         .then((hashPassword) => {
 
             const user = new User({
-
+                //creates new User using the following
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
                 email: req.body.email,
@@ -135,11 +143,13 @@ app.post('/register', (req, res) => {
 
 })
 
-app.get('/profile', auth, (req, res) => {
+//auth makes it so no one can access the route without a verfied cookie
+app.get('/profile', auth, async (req, res) => {
 
-    res.send("you are authorized")
-})
+    res.send({message: "verfied"})
+  });
 
+//Localhost 8080
 app.listen(port, () => {
 
     console.log("Connected on", port)
