@@ -32,6 +32,7 @@ const auth = require('./Auth/auth.js')
 const Register = require("./Routes/Register.js")
 const Login = require("./Routes/login.js")
 const userProfile = require("./Routes/userProfile.js")
+const adminDashboard = require("./Routes/adminProfile.js")
 
 //port 
 const port = 8080;
@@ -44,6 +45,8 @@ app.use('/register', Register)
 //userProfile
 //auth makes it so no one can access the route without a verfied cookie
 app.use('/profile', auth, userProfile)
+//admin-dashboard
+app.use('/admin-dashboard', auth, adminDashboard)
 //logout
 app.get('/logout', auth, (req, res) => {
     //Clears Cookies

@@ -17,6 +17,10 @@ userSchema = new Schema({
         require: [true, "Please Provude a Password"],
         unique: false
     },
+    role: {
+        type: String,
+        default: "User"
+    }
 })
 
 User = mongoose.model('User', userSchema)
