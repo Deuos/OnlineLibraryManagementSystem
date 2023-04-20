@@ -14,7 +14,7 @@ userSchema = new Schema({
     },
     password: {
         type: String,
-        require: [true, "Please Provude a Password"],
+        require: [true, "Please Provide a Password"],
         unique: false
     },
     role: {

@@ -4,8 +4,8 @@ const userProfile = express.Router();
 
 userProfile.get('/', async (req, res) => {
 
+  //renders profile from views/ejs
     res.render('profile')
-    //res.send({message: "verfied"})
   });
 
 

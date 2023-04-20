@@ -13,11 +13,13 @@ const Logout = express.Router();
 Login.get('/', (req, res) => {
 
     //renders login.ejs
-    res.render('login');
+    res.render('login', {errMsg: ""});
 })
 
 //Login Form 
 Login.post('/', (req, res, err) => {
+
+    let errMsg = ""
 
     User.findOne({ email: req.body.email })
 
@@ -39,7 +41,8 @@ Login.post('/', (req, res, err) => {
                     if (!passwordCheck) {
                         //redirects to /
                         //Password does not match
-                        return res.status(400).redirect('')
+                        errMsg = "Password does not match. Try Again!"
+                        return res.status(400).render('login', {errMsg: errMsg})
                     }
                     //create a JWT token that expires in 24 hours
                     const token = jwt.sign(
@@ -72,14 +75,16 @@ Login.post('/', (req, res, err) => {
                 .catch((err) => {
                     //redirects to /
                     //Password does not match
-                    res.status(400).redirect('/')
+                    errMsg = "Password does not match. Try Again!"
+                    res.status(400).render('login', {errMsg: errMsg})
                 })
         })
         //catch error if email does not exist
         .catch((err) => {
             //redirects to /
             //Email Not found
-            res.status(404).redirect('/')
+            errMsg = "Email not found. Try Again!"
+            res.status(404).render('login', {errMsg: errMsg})
         })
 
 })

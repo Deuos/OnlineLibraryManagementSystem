@@ -33,6 +33,8 @@ const Register = require("./Routes/Register.js")
 const Login = require("./Routes/login.js")
 const userProfile = require("./Routes/userProfile.js")
 const adminDashboard = require("./Routes/adminProfile.js")
+const addBook = require("./Routes/addbook.js")
+const viewBooks = require("./Routes/books.js")
 
 //port 
 const port = 8080;
@@ -42,11 +44,20 @@ const port = 8080;
 app.use('/', Login)
 //Register
 app.use('/register', Register)
+/*****USER******/
 //userProfile
 //auth makes it so no one can access the route without a verfied cookie
 app.use('/profile', auth, userProfile)
+/*****USER******/
+
+/*****ADMIN******/
 //admin-dashboard
 app.use('/admin-dashboard', auth, adminDashboard)
+//add-book
+app.use('/add-book', auth, addBook)
+//View books
+app.use('/books', auth, viewBooks)
+/*****ADMIN******/
 //logout
 app.get('/logout', auth, (req, res) => {
     //Clears Cookies
