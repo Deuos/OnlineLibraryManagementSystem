@@ -24,9 +24,7 @@ const auth = async (req, res, next) => {
     }
     catch (err) {
 
-        res.status(401).json({
-            err: new Error("invalid request")
-        })
+        res.status(401).redirect('/')
     }
 }
 

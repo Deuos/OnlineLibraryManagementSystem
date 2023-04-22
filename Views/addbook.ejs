@@ -32,9 +32,6 @@
           <label for="description">Example textarea</label>
           <textarea class="form-control" id="description" name="description" rows="2" required></textarea>
         </div>
-        <% if (msg !== "") { %>
-          <p id="errMessage" style="color: red"><%= msg %></p>
-        <% } %>
         <button type="submit" class="btn btn-primary mb-3">Add Book</button>
       </form>
     </div>
@@ -47,6 +44,66 @@
 </html>
 
 <script>
+  // Retrieve the book data from the backend
+  //Make it look better
+  fetch('/books')
+    .then(response => response.json())
+    .then(books => {
+      // Loop through the books and create HTML elements to display each book
+      const bookContainer = document.getElementById('book-container');
+      const table = document.createElement('table');
+      table.style.width = '100%';
+      bookContainer.appendChild(table);
+
+      const thead = document.createElement('thead');
+      const tr = document.createElement('tr');
+      tr.appendChild(document.createElement('th')).textContent = 'Title';
+      tr.appendChild(document.createElement('th')).textContent = 'Author';
+      tr.appendChild(document.createElement('th')).textContent = 'Description';
+      tr.appendChild(document.createElement('th')).textContent = 'Genre';
+      tr.appendChild(document.createElement('th')).textContent = 'Year';
+      tr.appendChild(document.createElement('th')).textContent = 'Actions'; // Add header for Actions
+      thead.appendChild(tr);
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      books.forEach(book => {
+        const tr = document.createElement('tr');
+        tr.style.width = '100%';
+        tr.appendChild(document.createElement('td')).textContent = book.title;
+        tr.appendChild(document.createElement('td')).textContent = book.author;
+        tr.appendChild(document.createElement('td')).textContent = book.description;
+        tr.appendChild(document.createElement('td')).textContent = book.genre;
+        tr.appendChild(document.createElement('td')).textContent = book.year;
+        const td = document.createElement('td'); // Create a td element to hold the button
+        const button = document.createElement('button');
+        button.textContent = 'Delete';
+        console.log(book._id)
+        button.addEventListener('click', (event) => {
+        const bookId = book._id; // Get the book ID
+        fetch(`/delete/${bookId}`, {
+        method: 'GET'
+        })
+          .then(response => {
+            if (response.ok) {
+              alert('Book deleted successfully');
+              window.location.reload(); // Reload the page to show updated book list
+            } else {
+              alert('Error deleting book');
+            }
+          })
+          .catch(error => console.error(error));
+        }); 
+        td.appendChild(button);
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+    })
+    .catch(error => console.error(error));
+</script>
+
+<!-- <script>
   // Retrieve the book data from the backend
   //Make it look better
   fetch('/books')
@@ -80,44 +137,6 @@
         tbody.appendChild(tr);
       });
       table.appendChild(tbody);
-    })
-    .catch(error => console.error(error));
-</script>
-
-<!-- <script>
-  // Retrieve the book data from the backend
-  //Make it look better
-  fetch('/books')
-    .then(response => response.json())
-    .then(books => {
-      // Loop through the books and create HTML elements to display each book
-      const bookContainer = document.getElementById('book-container');
-      books.forEach(book => {
-        const bookDiv = document.createElement('div');
-        bookDiv.classList.add('book');
-
-        const title = document.createElement('h2');
-        title.textContent = book.title;
-        bookDiv.appendChild(title);
-
-        const author = document.createElement('p');
-        author.textContent = `Author: ${book.author}`;
-        bookDiv.appendChild(author);
-
-        const description = document.createElement('p');
-        description.textContent = `Description: ${book.description}`;
-        bookDiv.appendChild(description);
-
-        const genre = document.createElement('p');
-        genre.textContent = `Genre: ${book.genre}`;
-        bookDiv.appendChild(genre);
-
-        const year = document.createElement('p');
-        year.textContent = `Year: ${book.year}`;
-        bookDiv.appendChild(year);
-
-        bookContainer.appendChild(bookDiv);
-      });
     })
     .catch(error => console.error(error));
 </script> -->

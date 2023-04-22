@@ -5,13 +5,11 @@ const addBook = express.Router();
 
 addBook.get('/', async (req, res) => {
 
-    res.render('addBook', {msg: ""})
+    res.render('addBook')
     //res.send({message: "verfied"})
   });
 
 addBook.post('/', async (req, res) => {
-
-    let msg = ""
 
     try {
     // Create a new book document using the request body
@@ -26,13 +24,11 @@ addBook.post('/', async (req, res) => {
     // Save the new book document to the MongoDB collection
     await newBook.save();
     // Redirect the user to the home page
-    msg = "Book added successfully"
-    res.render('addBook', { msg: msg });
+    res.redirect('/add-book')
 
     } catch (err) {
     console.error(err);
-    msg = "Error adding book"
-    res.status(500).render('addBook', {msg: msg});
+    res.redirect('/add-book')
     }
 });
 

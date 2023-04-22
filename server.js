@@ -4,6 +4,7 @@ const express = require("express")
 const bcrypt = require("bcrypt")
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken')
+const Book = require('./Models/book');
 
 //Mongodb
 const mongoose = require("mongoose")
@@ -35,6 +36,7 @@ const userProfile = require("./Routes/userProfile.js")
 const adminDashboard = require("./Routes/adminProfile.js")
 const addBook = require("./Routes/addbook.js")
 const viewBooks = require("./Routes/books.js")
+//const deleteBook = require("./Routes/deletebook.js")
 
 //port 
 const port = 8080;
@@ -55,6 +57,21 @@ app.use('/profile', auth, userProfile)
 app.use('/admin-dashboard', auth, adminDashboard)
 //add-book
 app.use('/add-book', auth, addBook)
+//Delete books
+app.get('/delete/:id', auth, async (req, res) => {
+    var uid = req.params.id;
+    console.log(uid)
+   try {
+    // Find the book by ID and delete it
+    await Book.findByIdAndDelete(req.params.id);
+    res.redirect('/add-book')
+    console.log("Deleted book successfully")
+  } catch (err) {
+    console.error(err);
+    res.redirect('/add-book')
+    console.log("Error deleting book")
+  }
+})
 //View books
 app.use('/books', auth, viewBooks)
 /*****ADMIN******/
