@@ -19,7 +19,8 @@ const auth = async (req, res, next) => {
         
         const decoded = await jwt.verify(token, SECRET_KEY)
         req.token = decoded
-
+        // req.id = decoded._id
+        req.email = decoded.email
         next()
     }
     catch (err) {

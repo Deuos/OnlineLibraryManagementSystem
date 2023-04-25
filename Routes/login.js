@@ -3,11 +3,10 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 //User Schema
-const User = require('../Models/user.js')
+const User = require('../Models/user')
 
 //Router
 const Login = express.Router();
-const Logout = express.Router();
 
 //Home/Login Views
 Login.get('/', (req, res) => {
@@ -15,6 +14,7 @@ Login.get('/', (req, res) => {
     //renders login.ejs
     res.render('login', {errMsg: ""});
 })
+
 
 //Login Form 
 Login.post('/', (req, res, err) => {
@@ -62,7 +62,6 @@ Login.post('/', (req, res, err) => {
 
                         redirectURL = "profile"
                     }
-
                     //Create cookie set the cookie experies in 24 hours and redirects to /profile
                     return res.cookie('access_token', token, {
                         httpOnly: true,

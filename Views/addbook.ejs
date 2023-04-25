@@ -10,6 +10,7 @@
   <body>
 
     <div class="container">
+      <a class="btn btn-primary" href="/logout" role="button">Logout</a>
       <h1>Add Book</h1>
       <form method="POST" action="/add-book">
         <div class="form-group">
@@ -62,7 +63,7 @@
       tr.appendChild(document.createElement('th')).textContent = 'Description';
       tr.appendChild(document.createElement('th')).textContent = 'Genre';
       tr.appendChild(document.createElement('th')).textContent = 'Year';
-      tr.appendChild(document.createElement('th')).textContent = 'Actions'; // Add header for Actions
+      tr.appendChild(document.createElement('th')).textContent = 'Status'; // Add header for Actions
       thead.appendChild(tr);
       table.appendChild(thead);
 
@@ -75,6 +76,7 @@
         tr.appendChild(document.createElement('td')).textContent = book.description;
         tr.appendChild(document.createElement('td')).textContent = book.genre;
         tr.appendChild(document.createElement('td')).textContent = book.year;
+        tr.appendChild(document.createElement('td')).textContent = book.status;
         const td = document.createElement('td'); // Create a td element to hold the button
         const button = document.createElement('button');
         button.textContent = 'Delete';
