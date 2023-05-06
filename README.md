@@ -1,13 +1,13 @@
-# Library-Management-System
+# Online-Library-Management-System
 Software Engineering Project
 
-##Installation Guide
+## Installation Guide
+- .env setup
 - Npm install
-- .env set DB_URL="Mongodb URL" and JWT_TOKEN=Randomwords
 - npm run start
 - Access through Localhost 8080
 
 
-## Admin Information
-- Admin email: admin@gmail.com
-- Admin Password: password
+### .env setup
+DB_URL="Mongodb URL" <br>
+JWT_TOKEN=Randomwords
