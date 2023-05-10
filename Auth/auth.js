@@ -12,15 +12,18 @@ const auth = async (req, res, next) => {
 
         const token = req.cookies.access_token;
 
-        if(!token) {
+        if (!token) {
 
             throw new Error()
         }
-        
+
         const decoded = await jwt.verify(token, SECRET_KEY)
         req.token = decoded
+        console.log(req.token)
         // req.id = decoded._id
         req.email = decoded.email
+        req.admin = decoded.admin
+        //console.log(req.admin)
         next()
     }
     catch (err) {

@@ -16,16 +16,16 @@ const mongoose = require("mongoose")
 const env = require('dotenv').config()
 
 //Intilize express
-const app =  express()
+const app = express()
 
 //Middleware
-app.use(express.urlencoded({ extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 app.use(cookieParser());
 
 
 //EJS renders .ejs files from views 
-app.set('view engine','ejs'); 
+app.set('view engine', 'ejs');
 
 //Connection to monogdb
 const dbConnect = require("./Database/databaseConnection.js")
@@ -43,6 +43,7 @@ const viewBooks = require("./Routes/books.js");
 const mylist = require("./Routes/mylist");
 const userCart = require("./Routes/userCart");
 const viewbooksProfile = require("./Routes/viewbooksProfile");
+const isAdmin = require("./Auth/isAdmin");
 
 //port 
 const port = 8080;
@@ -61,13 +62,12 @@ app.use('/profile', auth, userProfile)
 app.post('/checkout/:id', auth, async (req, res) => {
 
   try {
- 
+
     emailUser = req.token.userEmail;
     idUser = req.token.userID
-  
+    console.log(req.token)
     console.log(emailUser)
-    console.log(idUser)
-  
+
 
     // Find the book by id
     const book = await Book.findById(req.params.id);
@@ -99,7 +99,7 @@ app.post('/checkout/:id', auth, async (req, res) => {
     await book.save();
     console.log("Book status updated to Yes");
     // Return the checkout object
-    console.log(JSON.stringify(checkout))
+    //console.log(JSON.stringify(checkout))
     res.redirect('/profile')
   } catch (error) {
     console.error(error);
@@ -117,14 +117,14 @@ app.use('/booksProfile', auth, viewbooksProfile)
 
 /*****ADMIN******/
 //admin-dashboard
-app.use('/admin-dashboard', auth, adminDashboard)
+app.use('/admin-dashboard', auth, isAdmin, adminDashboard)
 //add-book
-app.use('/add-book', auth, addBook)
+app.use('/add-book', auth, isAdmin, addBook)
 //Delete books
-app.get('/delete/:id', auth, async (req, res) => {
-    var uid = req.params.id;
-    console.log(uid)
-   try {
+app.get('/delete/:id', auth, isAdmin, async (req, res) => {
+  var uid = req.params.id;
+  console.log(uid)
+  try {
     // Find the book by ID and delete it
     await Book.findByIdAndDelete(req.params.id);
     console.log("Book status updated to Yes");
@@ -137,25 +137,25 @@ app.get('/delete/:id', auth, async (req, res) => {
   }
 })
 
-app.get('/return/:id', auth, async(req, res) => {
+app.get('/return/:id', auth, isAdmin, async (req, res) => {
   try {
 
 
 
     const checkoutbookid = await Checkout.findById(req.params.id)
-    console.log(checkoutbookid.bookid)
+    //console.log(checkoutbookid.bookid)
 
     const books = await Book.findById(checkoutbookid.bookid)
-    console.log(books)
-    console.log(books.status)
-    
+    //console.log(books)
+    //console.log(books.status)
+
     books.status = "No"
     await books.save()
 
     //delete book from checkout
     await Checkout.findByIdAndDelete(req.params.id)
-  
-    
+
+
     res.redirect('/userCart')
     console.log("Successfully Returned")
   } catch (err) {
@@ -164,12 +164,12 @@ app.get('/return/:id', auth, async(req, res) => {
   }
 })
 //View books
-app.use('/books', auth, viewBooks)
+app.use('/books', auth, isAdmin, viewBooks)
 /*****ADMIN******/
 //logout
 app.get('/logout', auth, (req, res) => {
-    //Clears Cookies
-    res.clearCookie("access_token")
+  //Clears Cookies
+  res.clearCookie("access_token")
     //Redirects to Login - Homepage
     .redirect('/')
 })
@@ -178,5 +178,5 @@ app.get('/logout', auth, (req, res) => {
 //Localhost 8080
 app.listen(port, () => {
 
-    console.log("Connected on", port)
+  console.log("Connected on", port)
 })
