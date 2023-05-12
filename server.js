@@ -26,6 +26,7 @@ app.use(cookieParser());
 
 //EJS renders .ejs files from views 
 app.set('view engine','ejs'); 
+app.use("/public", express.static(__dirname + "/Views/public"));
 
 //Connection to monogdb
 const dbConnect = require("./Database/databaseConnection.js")
