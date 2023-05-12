@@ -12,7 +12,7 @@ const Login = express.Router();
 Login.get('/', (req, res) => {
 
     //renders login.ejs
-    res.render('login', {errMsg: ""});
+    res.render('login', { errMsg: "" });
 })
 
 
@@ -28,7 +28,7 @@ Login.post('/', (req, res, err) => {
 
             let Admin = false;
             //Checks Admin Status
-            if(user.role == "Admin") {
+            if (user.role == "Admin") {
 
                 Admin = true;
             }
@@ -42,13 +42,14 @@ Login.post('/', (req, res, err) => {
                         //redirects to /
                         //Password does not match
                         errMsg = "Password does not match. Try Again!"
-                        return res.status(400).render('login', {errMsg: errMsg})
+                        return res.status(400).render('login', { errMsg: errMsg })
                     }
                     //create a JWT token that expires in 24 hours
                     const token = jwt.sign(
                         {
                             userID: user._id,
                             userEmail: user.email,
+                            userRole: user.role
                         },
                         process.env.JWT_TOKEN
                     )
@@ -67,7 +68,7 @@ Login.post('/', (req, res, err) => {
                         httpOnly: true,
                         maxAge: 24 * 60 * 60 * 1000, // 24 hours
                     }).status(200)
-                    .redirect(redirectURL);
+                        .redirect(redirectURL);
 
                 })
                 //catches the error if the password doesn't match
@@ -75,7 +76,7 @@ Login.post('/', (req, res, err) => {
                     //redirects to /
                     //Password does not match
                     errMsg = "Password does not match. Try Again!"
-                    res.status(400).render('login', {errMsg: errMsg})
+                    res.status(400).render('login', { errMsg: errMsg })
                 })
         })
         //catch error if email does not exist
@@ -83,7 +84,7 @@ Login.post('/', (req, res, err) => {
             //redirects to /
             //Email Not found
             errMsg = "Email not found. Try Again!"
-            res.status(404).render('login', {errMsg: errMsg})
+            res.status(404).render('login', { errMsg: errMsg })
         })
 
 })

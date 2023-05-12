@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checked Out Books</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checked Out Books</title>
 </head>
+
 <body>
-    <h1>My list</h1>
-    <a class="btn btn-primary" href="/logout" role="button">Logout</a>
-    <div class="container" id="checkout-container">
-        <!-- This includes the books -->
-    </div>
+  <h1>My list</h1>
+  <a class="btn btn-primary" href="/logout" role="button">Logout</a>
+  <a class="btn btn-primary" href="/profile" role="button">Back</a>
+  <div class="container" id="checkout-container">
+    <!-- This includes the books -->
+  </div>
 </body>
+
 </html>
 
 <script>
@@ -49,20 +53,20 @@
         button.textContent = 'Return';
         console.log(book._id)
         button.addEventListener('click', (event) => {
-        const checkoutId = book._id; // Get the book ID
-        fetch(`/return/${checkoutId}`, {
-        method: 'GET'
-        })
-          .then(response => {
-            if (response.ok) {
-              alert('Return Successfully');
-              window.location.reload(); // Reload the page to show updated book list
-            } else {
-              alert('Error Returning');
-            }
+          const checkoutId = book._id; // Get the book ID
+          fetch(`/return/${checkoutId}`, {
+            method: 'GET'
           })
-          .catch(error => console.error(error));
-        }); 
+            .then(response => {
+              if (response.ok) {
+                alert('Return Successfully');
+                window.location.reload(); // Reload the page to show updated book list
+              } else {
+                alert('Error Returning');
+              }
+            })
+            .catch(error => console.error(error));
+        });
         td.appendChild(button);
         tr.appendChild(td);
         tbody.appendChild(tr);
