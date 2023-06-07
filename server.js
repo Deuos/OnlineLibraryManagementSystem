@@ -25,7 +25,7 @@ app.use(cookieParser());
 
 
 //EJS renders .ejs files from views 
-app.set('view engine','ejs'); 
+app.set('view engine', 'ejs');
 app.use("/public", express.static(__dirname + "/Views/public"));
 
 //Connection to monogdb
@@ -66,8 +66,8 @@ app.post('/checkout/:id', auth, async (req, res) => {
 
     emailUser = req.token.userEmail;
     idUser = req.token.userID
-    console.log(req.token)
-    console.log(emailUser)
+    //console.log(req.token)
+    //console.log(emailUser)
 
 
     // Find the book by id
@@ -124,7 +124,7 @@ app.use('/add-book', auth, isAdmin, addBook)
 //Delete books
 app.get('/delete/:id', auth, isAdmin, async (req, res) => {
   var uid = req.params.id;
-  console.log(uid)
+  //console.log(uid)
   try {
     // Find the book by ID and delete it
     await Book.findByIdAndDelete(req.params.id);
@@ -142,13 +142,13 @@ app.get('/return/:id', auth, isAdmin, async (req, res) => {
   try {
 
 
-
+    console.log(req.params.id)
     const checkoutbookid = await Checkout.findById(req.params.id)
-    //console.log(checkoutbookid.bookid)
+    console.log(checkoutbookid.bookid)
 
     const books = await Book.findById(checkoutbookid.bookid)
     //console.log(books)
-    //console.log(books.status)
+    console.log(books.status)
 
     books.status = "No"
     await books.save()
